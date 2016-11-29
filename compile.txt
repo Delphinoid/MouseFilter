@@ -1,0 +1,1 @@
+g++ main.c settingsProfile.c utils.c -o MouseFilter.exe -linterception

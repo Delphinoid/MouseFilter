@@ -1,0 +1,48 @@
+// Command List
+// ~~~~~~~~~~~~
+//
+// windowsVersion          - Windows version to simulate for accel.
+//                           Possible values: XP, Vista, 7
+//                           Default: 7
+//
+// mouseSensitivity        - The sensitivity multiplier. Equivalent to the slider in Windows.
+//                           Possible values: Accepts any valid floating point number.
+//                           Default: 1.0
+//
+// enhancePointerPrecision - Whether or not mouse accel is enabled.
+//                           Possible values: 0 (off), 1 (on)
+//                           Default: 1
+//
+// accelMethod             - Which method of accel to use in Windows 7; the original method (more like XP) or the new method.
+//                           Possible values: 0 (older, broken method), 1 (newer, patched method)
+//                           Default: 1
+//
+// subPixelation           - Whether or not sub-pixelation is enabled.
+//                           Possible values: 0 (off), 1 (on)
+//                           Default: 1
+//
+// screenResolution        - The resolution of the screen, in DPI.
+//                           Possible values: Accepts any valid unsigned integer
+//                           Default: 96
+//
+// screenRefreshRate       - The refresh rate of the screen, in hertz.
+//                           Possible values: Accepts any valid unsigned integer
+//                           Default: 60
+//
+// thresholdsX             - An array of thresholds for the speed of the mouse.
+//                         - Possible values: An array of 5 floating point numbers, delimited by spaces
+//                         - Default: 0.0 0.43 1.25 3.86 40.0
+//
+// thresholdsY             - An array of thresholds for the resulting speed of the pointer.
+//                         - Possible values: An array of 5 floating point numbers, delimited by spaces
+//                         - Default: 0.0 1.37 5.30 24.30 568.0
+
+windowsVersion = 7
+mouseSensitivity = 1.25
+enhancePointerPrecision = 1
+accelMethod = 1
+subPixelation = 1
+screenResolution = 126
+screenRefreshRate = 60
+thresholdsX = 0.0 0.43 1.25 3.86 40.0
+thresholdsX = 0.0 1.37 5.30 24.30 568.0
