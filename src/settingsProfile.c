@@ -167,9 +167,9 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 
 				}else if(strcmp(compare, "screenResolution = ") == 0){
 					spSubstringHelper(lineData, line, 19, strlen(line) - 20);
-					int tempInt = strtol(lineData, NULL, 10);
-					if(tempInt > 0){
-						profile->screenResolution = (unsigned int)tempInt;
+					float tempFloat = strtof(lineData, NULL);
+					if(tempFloat > 0.0f){
+						profile->screenResolution = tempFloat;
 					}
 
 				}
@@ -229,7 +229,7 @@ void spPrintSettings(settingsProfile *profile){
 	printf("Enhance pointer precision: %s\n", profile->enhancePointerPrecision == 0 ? "Off" : "On");
 	printf("Acceleration method: %s\n", profile->accelMethod == 0 ? "Original" : "New");
 	printf("Sub-pixelation: %s\n", profile->subPixelation == 0 ? "Off" : "On");
-	printf("Screen resolution: %u DPI\n", profile->screenResolution);
+	printf("Screen resolution: %f PPI\n", profile->screenResolution);
 	printf("Screen refresh rate: %u Hz\n", profile->screenRefreshRate);
 	printf("Mouse speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsX[0], profile->thresholdsX[1], profile->thresholdsX[2], profile->thresholdsX[3], profile->thresholdsX[4]);
 	printf("Pointer speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsY[0], profile->thresholdsY[1], profile->thresholdsY[2], profile->thresholdsY[3], profile->thresholdsY[4]);
@@ -316,16 +316,12 @@ void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouse
 			}
 		}
 
-		// (Windows 7 does not clear remainders)
-		float resolution  = (float)profile->screenResolution;
-		float refreshRate = (float)profile->screenRefreshRate;
-
 		// Fixed or original acceleration method
 		float screenResolutionFactor;
 		if(profile->windowsVersion == 2 && profile->accelMethod){
-			screenResolutionFactor = resolution / 150.0f;
+			screenResolutionFactor = (float)profile->screenResolution / 150.0f;
 		}else{
-			screenResolutionFactor = refreshRate / resolution;
+			screenResolutionFactor = (float)profile->screenRefreshRate / (float)profile->screenResolution;
 		}
 
 		// Calculate accelerated mouse deltas

@@ -22,7 +22,7 @@ typedef struct {
 	int previousMouseRawY;
 	float previousMouseXRemainder;
 	float previousMouseYRemainder;
-	unsigned int screenResolution;   // DPI
+	float screenResolution;   // PPI
 	unsigned int screenRefreshRate;  // Hz
 	float pixelGain;
 	float thresholdsX[5];  // Thresholds for mouse speed
