@@ -73,7 +73,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	/* Load settings profile */
 	FILE *serverConfig = fopen(cfgPath, "r");
 	char line[1000];
-	char compare[26];
+	char compare[27];
 	char lineData[1000];
 
 	if(serverConfig != NULL){
