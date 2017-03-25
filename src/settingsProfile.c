@@ -327,16 +327,16 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 		float mouseMag = max(abs(mouseRawX), abs(mouseRawY)) + min(abs(mouseRawX), abs(mouseRawY)) / 2.0f;
 		int currentSegmentIndex = profile->FINDSEGMENT;
 		profile->pixelGain = screenResolutionFactor
-							 * profile->mouseSensitivity
-							 * spSmoothMouseGain(profile, mouseMag / 3.5f, &currentSegmentIndex)
-							 / 3.5f;
+		                     * profile->mouseSensitivity
+		                     * spSmoothMouseGain(profile, mouseMag / 3.5f, &currentSegmentIndex)
+		                     / 3.5f;
 
 		if(currentSegmentIndex > profile->previousSegmentIndex){
 			// Average with calculation using previous curve segment
 			float pixelGainUsingPreviousSegment = screenResolutionFactor
-												  * profile->mouseSensitivity
-												  * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
-												  / 3.5f;
+			                                      * profile->mouseSensitivity
+			                                      * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
+			                                      / 3.5f;
 			profile->pixelGain = (profile->pixelGain + pixelGainUsingPreviousSegment) / 2.0f;
 		}
 		profile->previousSegmentIndex = currentSegmentIndex;
