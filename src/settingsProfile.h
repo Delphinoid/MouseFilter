@@ -32,6 +32,6 @@ typedef struct {
 
 void spLoad(settingsProfile *profile, const char *cfgPath);
 void spPrintSettings(settingsProfile *profile);
-void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY);
+extern inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY);
 
 #endif

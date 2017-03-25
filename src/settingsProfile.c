@@ -209,6 +209,8 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 						profile->accelMethod = 0;
 					}else if(strcmp(lineData, "1") == 0){
 						profile->accelMethod = 1;
+					}else if(strcmp(lineData, "2") == 0){
+						profile->accelMethod = 2;
 					}
 				}
 			}
@@ -221,7 +223,6 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 }
 
 void spPrintSettings(settingsProfile *profile){
-
 	printf("Profile loaded\n");
 	printf("-------------------------------------------------------------------------------\n");
 	printf("Windows version: Windows %s\n", profile->windowsVersion == 0 ? "XP" : (profile->windowsVersion == 1 ? "Vista" : "7"));
@@ -234,7 +235,6 @@ void spPrintSettings(settingsProfile *profile){
 	printf("Mouse speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsX[0], profile->thresholdsX[1], profile->thresholdsX[2], profile->thresholdsX[3], profile->thresholdsX[4]);
 	printf("Pointer speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsY[0], profile->thresholdsY[1], profile->thresholdsY[2], profile->thresholdsY[3], profile->thresholdsY[4]);
 	printf("-------------------------------------------------------------------------------\n");
-
 }
 
 float spSmoothMouseGain(settingsProfile *profile, float deviceSpeed, int *segment){
@@ -284,7 +284,7 @@ float spSmoothMouseGain(settingsProfile *profile, float deviceSpeed, int *segmen
 
 }
 
-void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY){
+inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY){
 
 	if(profile->enhancePointerPrecision){
 
