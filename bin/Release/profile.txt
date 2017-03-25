@@ -1,31 +1,27 @@
 // Command List
 // ~~~~~~~~~~~~
 //
-// windowsVersion          - Windows version to simulate for accel.
+// windowsVersion          - Windows version to simulate for enhanced pointer precision.
 //                           Possible values: XP, Vista, 7
 //                           Default: 7
 //
-// mouseSensitivity        - The sensitivity multiplier. Equivalent to the slider in Windows.
+// mouseSensitivity        - The base sensitivity multiplier.
 //                           Possible values: Accepts any valid floating point number.
 //                           Default: 1.0
 //
-// enhancePointerPrecision - Whether or not mouse accel is enabled.
+// acceleration            - Which method of accel to use; none, Windows-style or a custom, non-interpolated method.
+//                           Possible values: 0 (none), 1 (enhanced pointer precision), 2 (custom)
+//                           Default: 1
+//
+// subPixelation           - Whether or not sub-pixelation is enabled. Keeping this on is recommended.
 //                           Possible values: 0 (off), 1 (on)
 //                           Default: 1
 //
-// accelMethod             - Which method of accel to use in Windows 7; the original method (more like XP) or the new method.
-//                           Possible values: 0 (older, broken method), 1 (newer, patched method)
-//                           Default: 1
-//
-// subPixelation           - Whether or not sub-pixelation is enabled.
-//                           Possible values: 0 (off), 1 (on)
-//                           Default: 1
-//
-// screenResolution        - The resolution of the screen, in PPI.
+// screenResolution        - The resolution of the screen, in PPI. Used with Windows accel.
 //                           Possible values: Accepts any valid unsigned integer
 //                           Default: 96
 //
-// screenRefreshRate       - The refresh rate of the screen, in hertz.
+// screenRefreshRate       - The refresh rate of the screen, in hertz. Used only with Windows 7 accel.
 //                           Possible values: Accepts any valid unsigned integer
 //                           Default: 60
 //
@@ -38,9 +34,8 @@
 //                         - Default: 0.0 1.37 5.30 24.30 568.0
 
 windowsVersion = 7
-mouseSensitivity = 1.25
-enhancePointerPrecision = 1
-accelMethod = 1
+mouseSensitivity = 1.00
+acceleration = 1
 subPixelation = 1
 screenResolution = 129.58394
 screenRefreshRate = 60

@@ -45,7 +45,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	profile->windowsVersion = 2;
 	profile->mouseSensitivity = 1.0f;
 	profile->enhancePointerPrecision = 1;
-	profile->accelMethod = 1;
+	profile->acceleration = 1;
 	profile->subPixelation = 1;
 	profile->previousSegmentIndex = 0;
 	profile->FINDSEGMENT = -1;
@@ -200,17 +200,17 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 			}
-			// accelMethod
-			if(strlen(line) > 14){
-				spSubstringHelper(compare, line, 0, 14);
-				if(strcmp(compare, "accelMethod = ") == 0){
-					spSubstringHelper(lineData, line, 14, strlen(line) - 15);
+			// acceleration
+			if(strlen(line) > 15){
+				spSubstringHelper(compare, line, 0, 15);
+				if(strcmp(compare, "acceleration = ") == 0){
+					spSubstringHelper(lineData, line, 15, strlen(line) - 15);
 					if(strcmp(lineData, "0") == 0){
-						profile->accelMethod = 0;
+						profile->acceleration = 0;
 					}else if(strcmp(lineData, "1") == 0){
-						profile->accelMethod = 1;
+						profile->acceleration = 1;
 					}else if(strcmp(lineData, "2") == 0){
-						profile->accelMethod = 2;
+						profile->acceleration = 2;
 					}
 				}
 			}
@@ -227,8 +227,7 @@ void spPrintSettings(settingsProfile *profile){
 	printf("-------------------------------------------------------------------------------\n");
 	printf("Windows version: Windows %s\n", profile->windowsVersion == 0 ? "XP" : (profile->windowsVersion == 1 ? "Vista" : "7"));
 	printf("Mouse sensitivity: %f\n", profile->mouseSensitivity);
-	printf("Enhance pointer precision: %s\n", profile->enhancePointerPrecision == 0 ? "Off" : "On");
-	printf("Acceleration method: %s\n", profile->accelMethod == 0 ? "Original" : "New");
+	printf("Acceleration method: %s\n", profile->acceleration == 0 ? "None" : (profile->acceleration == 1 ? "Enhanced pointer precision" : "Custom"));
 	printf("Sub-pixelation: %s\n", profile->subPixelation == 0 ? "Off" : "On");
 	printf("Screen resolution: %f PPI\n", profile->screenResolution);
 	printf("Screen refresh rate: %u Hz\n", profile->screenRefreshRate);
@@ -286,9 +285,9 @@ float spSmoothMouseGain(settingsProfile *profile, float deviceSpeed, int *segmen
 
 inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY){
 
-	if(profile->enhancePointerPrecision){
+	if(profile->enhancePointerPrecision && profile->acceleration == 1){
 
-		// Handle remainders same as XP
+		// Handle last movement's remainders as XP does
 		if(profile->windowsVersion == 0){
 			if(Sign(mouseRawX) != Sign(profile->previousMouseRawX) || mouseRawX == 0){
 				profile->previousMouseXRemainder = 0.0f;
@@ -300,7 +299,7 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 			profile->previousMouseRawY = mouseRawY;
 		}
 
-		// Handle remainders same as Vista
+		// Handle movement's remainders as Vista does
 		if(profile->windowsVersion == 1){
 			if(mouseRawX != 0){
 				if(Sign(mouseRawX) != Sign(profile->previousMouseRawX)){
@@ -318,7 +317,7 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 
 		// Fixed or original acceleration method
 		float screenResolutionFactor;
-		if(profile->windowsVersion == 2 && profile->accelMethod){
+		if(profile->windowsVersion == 2){
 			screenResolutionFactor = (float)profile->screenResolution / 150.0f;
 		}else{
 			screenResolutionFactor = (float)profile->screenRefreshRate / (float)profile->screenResolution;
@@ -328,16 +327,16 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 		float mouseMag = max(abs(mouseRawX), abs(mouseRawY)) + min(abs(mouseRawX), abs(mouseRawY)) / 2.0f;
 		int currentSegmentIndex = profile->FINDSEGMENT;
 		profile->pixelGain = screenResolutionFactor
-		                     * profile->mouseSensitivity
-		                     * spSmoothMouseGain(profile, mouseMag / 3.5f, &currentSegmentIndex)
-		                     / 3.5f;
+							 * profile->mouseSensitivity
+							 * spSmoothMouseGain(profile, mouseMag / 3.5f, &currentSegmentIndex)
+							 / 3.5f;
 
 		if(currentSegmentIndex > profile->previousSegmentIndex){
 			// Average with calculation using previous curve segment
 			float pixelGainUsingPreviousSegment = screenResolutionFactor
-			                                      * profile->mouseSensitivity
-			                                      * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
-			                                      / 3.5f;
+												  * profile->mouseSensitivity
+												  * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
+												  / 3.5f;
 			profile->pixelGain = (profile->pixelGain + pixelGainUsingPreviousSegment) / 2.0f;
 		}
 		profile->previousSegmentIndex = currentSegmentIndex;
@@ -391,7 +390,20 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 
 	}else{
 
-		if(profile->mouseSensitivity == 1.0f){ // Slider = 0, no remainder to handle
+		// Get mouse sensitivity multiplier
+		float accelerationMultiplier = profile->mouseSensitivity;
+		if(profile->acceleration == 2){
+			float speed = sqrt(mouseRawX*mouseRawX + mouseRawY*mouseRawY);
+			int i;
+			for(i = 4; i >= 0; i--){
+				if(speed >= profile->thresholdsX[i]){
+					accelerationMultiplier = profile->thresholdsY[i];
+					i = -1;
+				}
+			}
+		}
+
+		if(accelerationMultiplier == 1.0f){ // Slider = 0, no remainder to handle
 
 			*mouseX = mouseRawX;
 			*mouseY = mouseRawY;
@@ -399,8 +411,8 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 		}else{
 
 			// Calculate accelerated mouse deltas
-			float mouseXplusRemainder = mouseRawX * profile->mouseSensitivity + profile->previousMouseXRemainder;
-			float mouseYplusRemainder = mouseRawY * profile->mouseSensitivity + profile->previousMouseYRemainder;
+			float mouseXplusRemainder = mouseRawX * accelerationMultiplier + profile->previousMouseXRemainder;
+			float mouseYplusRemainder = mouseRawY * accelerationMultiplier + profile->previousMouseYRemainder;
 
 			if(mouseXplusRemainder >= 0){
 				*mouseX = (int)floor(mouseXplusRemainder);

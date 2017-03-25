@@ -14,7 +14,7 @@ typedef struct {
 	unsigned int windowsVersion;  // 0 = XP, 1 = Vista, 2 = 7
 	float mouseSensitivity;  // Sensitivity multiplier
 	unsigned int enhancePointerPrecision;  // Whether or not threshold-based mouse acceleration is enabled
-	unsigned int accelMethod;    // Whether or not we're using the patched mouse acceleration method
+	unsigned int acceleration;    // Whether or not we're using the patched mouse acceleration method
 	unsigned int subPixelation;  // Whether or not sub-pixelation is enabled
 	int previousSegmentIndex;  // used for interpolation
 	int FINDSEGMENT;  // used for interpolation
