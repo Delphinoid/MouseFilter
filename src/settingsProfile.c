@@ -211,6 +211,8 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 						profile->acceleration = 1;
 					}else if(strcmp(lineData, "2") == 0){
 						profile->acceleration = 2;
+					}else if(strcmp(lineData, "3") == 0){
+						profile->acceleration = 3;
 					}
 				}
 			}
@@ -227,7 +229,7 @@ void spPrintSettings(settingsProfile *profile){
 	printf("-------------------------------------------------------------------------------\n");
 	printf("Windows version: Windows %s\n", profile->windowsVersion == 0 ? "XP" : (profile->windowsVersion == 1 ? "Vista" : "7"));
 	printf("Mouse sensitivity: %f\n", profile->mouseSensitivity);
-	printf("Acceleration method: %s\n", profile->acceleration == 0 ? "None" : (profile->acceleration == 1 ? "Enhanced pointer precision" : "Custom"));
+	printf("Acceleration method: %s\n", profile->acceleration == 0 ? "None" : (profile->acceleration == 1 ? "Enhanced pointer precision" : (profile->acceleration == 2 ? "Non-interpolated" : "Linear")));
 	printf("Sub-pixelation: %s\n", profile->subPixelation == 0 ? "Off" : "On");
 	printf("Screen resolution: %f PPI\n", profile->screenResolution);
 	printf("Screen refresh rate: %u Hz\n", profile->screenRefreshRate);
@@ -397,8 +399,17 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 			int i;
 			for(i = 4; i >= 0; i--){
 				if(speed >= profile->thresholdsX[i]){
-					accelerationMultiplier = profile->thresholdsY[i];
-					i = -1;
+					if(profile->acceleration == 2 || i >= 4){
+						// Non-interpolated accel
+						accelerationMultiplier *= profile->thresholdsY[i];
+						i = -1;
+					}else{
+						// Linear accel
+						accelerationMultiplier *= (speed - profile->thresholdsX[i]) * (profile->thresholdsY[i+1] - profile->thresholdsY[i]) /
+						                          (profile->thresholdsX[i+1] - profile->thresholdsX[i]) +
+						                          profile->thresholdsY[i+1];
+						i = -1;
+					}
 				}
 			}
 		}

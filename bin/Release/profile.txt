@@ -10,10 +10,10 @@
 //                           Default: 1.0
 //
 // acceleration            - Which method of accel to use; none, Windows-style or a custom, non-interpolated method.
-//                           Possible values: 0 (none), 1 (enhanced pointer precision), 2 (custom)
+//                           Possible values: 0 (none), 1 (enhanced pointer precision), 2 (non-interpolated), 3 (linear)
 //                           Default: 1
 //
-// subPixelation           - Whether or not sub-pixelation is enabled. Keeping this on is recommended.
+// subPixelation           - Whether or not sub-pixelation is forced for XP and Vista style enhanced pointer precision. Keeping this on is recommended.
 //                           Possible values: 0 (off), 1 (on)
 //                           Default: 1
 //
