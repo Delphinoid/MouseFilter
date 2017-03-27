@@ -194,7 +194,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			if(strlen(line) > 16){
 				spSubstringHelper(compare, line, 0, 16);
 				if(strcmp(compare, "subPixelation = ") == 0){
-					spSubstringHelper(lineData, line, 16, strlen(line) - 17);
+					spSubstringHelper(lineData, line, 16, 1);
 					if(strcmp(lineData, "0") == 0){
 						profile->subPixelation = 0;
 					}else if(strcmp(lineData, "1") == 0){
@@ -206,7 +206,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			if(strlen(line) > 15){
 				spSubstringHelper(compare, line, 0, 15);
 				if(strcmp(compare, "acceleration = ") == 0){
-					spSubstringHelper(lineData, line, 15, strlen(line) - 15);
+					spSubstringHelper(lineData, line, 15, 1);
 					if(strcmp(lineData, "0") == 0){
 						profile->acceleration = 0;
 					}else if(strcmp(lineData, "1") == 0){
