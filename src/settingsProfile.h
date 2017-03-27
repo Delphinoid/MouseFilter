@@ -27,6 +27,7 @@ typedef struct {
 	float pixelGain;
 	float thresholdsX[5];  // Thresholds for mouse speed
 	float thresholdsY[5];  // Thresholds for resulting pointer speed
+	unsigned int verbose;  // When set to 1, enables a verbose terminal output
 
 } settingsProfile;
 

@@ -32,6 +32,10 @@
 // thresholdsY             - An array of thresholds for the resulting speed of the pointer.
 //                         - Possible values: An array of 5 floating point numbers, delimited by spaces
 //                         - Default: 0.0 1.37 5.30 24.30 568.0
+//
+// verbose                 - Enables a verbose output mode on the terminal.
+//                         - Possible values: Doesn't take in a value.
+//                         - Default: Disabled.
 
 windowsVersion = 7
 mouseSensitivity = 1.00

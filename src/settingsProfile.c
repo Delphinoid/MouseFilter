@@ -69,6 +69,8 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	profile->thresholdsY[3] = 24.30f;
 	profile->thresholdsY[4] = 568.0f;
 
+	profile->verbose = 0;
+
 
 	/* Load settings profile */
 	FILE *serverConfig = fopen(cfgPath, "r");
@@ -216,7 +218,13 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 			}
-
+			// verbose
+			if(strlen(line) >= 7){
+				spSubstringHelper(compare, line, 0, 7);
+				if(strcmp(compare, "verbose") == 0){
+					profile->verbose = 1;
+				}
+			}
 		}
 	}
 
@@ -235,7 +243,7 @@ void spPrintSettings(settingsProfile *profile){
 	printf("Screen refresh rate: %u Hz\n", profile->screenRefreshRate);
 	printf("Mouse speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsX[0], profile->thresholdsX[1], profile->thresholdsX[2], profile->thresholdsX[3], profile->thresholdsX[4]);
 	printf("Pointer speed thresholds: {%f, %f, %f, %f, %f}\n", profile->thresholdsY[0], profile->thresholdsY[1], profile->thresholdsY[2], profile->thresholdsY[3], profile->thresholdsY[4]);
-	printf("-------------------------------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------------------\n\n");
 }
 
 float spSmoothMouseGain(settingsProfile *profile, float deviceSpeed, int *segment){
@@ -441,6 +449,11 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 
 		}
 
+	}
+
+	// Verbose terminal output
+	if(profile->verbose){
+		printf("Raw: %i, %i  -  Accelerated: %i, %i  -  Remainder: %f, %f\n", mouseRawX, mouseRawY, *mouseX, *mouseY, profile->previousMouseXRemainder, profile->previousMouseYRemainder);
 	}
 
 }
