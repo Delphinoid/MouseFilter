@@ -402,7 +402,7 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 
 		// Get mouse sensitivity multiplier
 		float accelerationMultiplier = profile->mouseSensitivity;
-		if(profile->acceleration == 2){
+		if(profile->acceleration != 0){
 			float speed = sqrt(mouseRawX*mouseRawX + mouseRawY*mouseRawY);
 			int i;
 			for(i = 4; i >= 0; i--){
