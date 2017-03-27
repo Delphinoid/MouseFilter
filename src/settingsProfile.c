@@ -23,6 +23,9 @@
 #define abs(_a)	((_a >= 0) ? _a : -_a)
 #endif
 
+#define NAN 0.0 / 0.0
+#define INF 1.0 / 0.0
+
 void spSubstringHelper(char *strTarget, char *strCopy, unsigned int pos, unsigned int length){
 
 	if(pos + length <= strlen(strCopy)){
@@ -361,7 +364,7 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 		// Update x
 		if(profile->windowsVersion == 2){
 			// Windows 7
-			if(mouseXplusRemainder >= 0){
+			if(mouseXplusRemainder >= 0.f){
 				*mouseX = (int)floor(mouseXplusRemainder);
 			}else{
 				*mouseX = -(int)floor(-mouseXplusRemainder);
@@ -403,20 +406,33 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 		// Get mouse sensitivity multiplier
 		float accelerationMultiplier = profile->mouseSensitivity;
 		if(profile->acceleration != 0){
+			float tempMult = accelerationMultiplier;
 			float speed = sqrt(mouseRawX*mouseRawX + mouseRawY*mouseRawY);
 			int i;
 			for(i = 4; i >= 0; i--){
 				if(speed >= profile->thresholdsX[i]){
 					if(profile->acceleration == 2 || i >= 4){
 						// Non-interpolated accel
-						accelerationMultiplier *= profile->thresholdsY[i];
-						i = -1;
+						tempMult *= profile->thresholdsY[i];
+						if(tempMult != 0.f){
+							accelerationMultiplier = tempMult;
+							i = -1;
+						}
 					}else{
 						// Linear accel
-						accelerationMultiplier *= (speed - profile->thresholdsX[i]) * (profile->thresholdsY[i+1] - profile->thresholdsY[i]) /
-						                          (profile->thresholdsX[i+1] - profile->thresholdsX[i]) +
-						                          profile->thresholdsY[i+1];
-						i = -1;
+						float div = profile->thresholdsX[i+1] - profile->thresholdsX[i];
+						if(div != 0.f){
+							tempMult *= (speed - profile->thresholdsX[i]) * (profile->thresholdsY[i+1] - profile->thresholdsY[i]) /
+							            div + profile->thresholdsY[i+1];
+							if(tempMult != 0.f){
+								accelerationMultiplier = tempMult;
+								i = -1;
+							}
+						}else{
+							if(profile->verbose){
+								printf("*******\nPotential divide-by-zero, please fix your acceleration thresholds!\n*******\n");
+							}
+						}
 					}
 				}
 			}
@@ -433,14 +449,14 @@ inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int
 			float mouseXplusRemainder = mouseRawX * accelerationMultiplier + profile->previousMouseXRemainder;
 			float mouseYplusRemainder = mouseRawY * accelerationMultiplier + profile->previousMouseYRemainder;
 
-			if(mouseXplusRemainder >= 0){
+			if(mouseXplusRemainder >= 0.f){
 				*mouseX = (int)floor(mouseXplusRemainder);
 			}else{
 				*mouseX = -(int)floor(-mouseXplusRemainder);
 			}
 			profile->previousMouseXRemainder = mouseXplusRemainder - *mouseX;
 
-			if(mouseYplusRemainder >= 0){
+			if(mouseYplusRemainder >= 0.f){
 				*mouseY = (int)floor(mouseYplusRemainder);
 			}else{
 				*mouseY = -(int)floor(-mouseYplusRemainder);
