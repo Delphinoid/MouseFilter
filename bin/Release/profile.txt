@@ -1,48 +1,70 @@
 // Command List
 // ~~~~~~~~~~~~
 //
-// windowsVersion          - Windows version to simulate for enhanced pointer precision.
-//                           Possible values: XP, Vista, 7
-//                           Default: 7
 //
-// mouseSensitivity        - The base sensitivity multiplier.
-//                           Possible values: Accepts any valid floating point number.
-//                           Default: 1.0
+// NOTE: Commands and inputs are case-sensitive.
 //
-// acceleration            - Which method of accel to use; none, Windows-style or a custom, non-interpolated method.
-//                           Possible values: 0 (none), 1 (enhanced pointer precision), 2 (non-interpolated), 3 (linear)
-//                           Default: 1
 //
-// subPixelation           - Whether or not sub-pixelation is forced for XP and Vista style enhanced pointer precision. Keeping this on is recommended.
-//                           Possible values: 0 (off), 1 (on)
-//                           Default: 1
+// Sensitivity               - The base sensitivity multiplier.
+//                             Possible values: Accepts any positive, non-zero floating point number
+//                             Default: 1.0
 //
-// screenResolution        - The resolution of the screen, in PPI. Used with Windows accel.
-//                           Possible values: Accepts any valid unsigned integer
-//                           Default: 96
+// Acceleration              - Which method of accel to use: none, Windows XP, Windows Vista, Windows 7 or Quake
+//                             Possible values: XP (Windows XP style enhanced pointer precision), Vista (Windows Vista style enhanced pointer precision), 7 (Windows 7 style enhanced pointer precision), Quake (Quake acceleration)
+//                             Default: 0 (none)
 //
-// screenRefreshRate       - The refresh rate of the screen, in hertz. Used only with Windows 7 accel.
-//                           Possible values: Accepts any valid unsigned integer
-//                           Default: 60
+// InvertX                   - Whether or not horizontal mouse movement is inverted.
+//                             Possible values: FALSE, 0 (off), TRUE, 1 (on)
+//                             Default: 0
 //
-// thresholdsX             - An array of thresholds for the speed of the mouse.
-//                         - Possible values: An array of 5 floating point numbers, delimited by spaces
-//                         - Default: 0.0 0.43 1.25 3.86 40.0
+// InvertY                   - Whether or not vertical mouse movement is inverted.
+//                             Possible values: FALSE, 0 (off), TRUE, 1 (on)
+//                             Default: 0
 //
-// thresholdsY             - An array of thresholds for the resulting speed of the pointer.
-//                         - Possible values: An array of 5 floating point numbers, delimited by spaces
-//                         - Default: 0.0 1.37 5.30 24.30 568.0
+// WindowsScreenResolution   - The resolution of the screen, in PPI. Used with enhanced pointer precision.
+//                             Possible values: Accepts any non-zero unsigned integer
+//                             Default: 96
 //
-// verbose                 - Enables a verbose output mode on the terminal.
-//                         - Possible values: Doesn't take in a value.
-//                         - Default: Disabled.
+// WindowsScreenRefreshRate  - The refresh rate of the screen, in hertz. Used with Windows 7 enhanced pointer precision.
+//                             Possible values: Accepts any non-zero unsigned integer
+//                             Default: 60
+//
+// WindowsSubPixelation      - Whether or not sub-pixelation is forced. Used with Windows XP and Vista enhanced pointer precision. Keeping this on is recommended.
+//                             Possible values: FALSE, 0 (off), TRUE, 1 (on)
+//                             Default: 1
+//
+// WindowsThresholdsX        - An array of thresholds for the speed of the mouse. Used with enhanced pointer precision.
+//                             Possible values: An array of 5 positive floating point numbers, delimited by spaces
+//                             Default: 0.0 0.43 1.25 3.86 40.0
+//
+// WindowsThresholdsY        - An array of thresholds for the resulting speed of the pointer. Used with enhanced pointer precision.
+//                             Possible values: An array of 5 positive floating point numbers, delimited by spaces
+//                             Default: 0.0 1.37 5.30 24.30 568.0
+//
+// QuakeAccel                - Equivalent to "cl_mouseaccel" in Quake.
+//                             Possible values: Accepts any positive floating point number
+//                             Default: 1.0
+//
+// QuakeAccelPower           - Equivalent to "cl_mouseaccelpower" in Quake.
+//                             Possible values: Accepts any positive floating point number. Generally, 1 = no accel, 2 = linear accel and 3 = parabolic accel
+//                             Default: 1.0
+//
+// QuakeAccelOffset          - Equivalent to "cl_mouseacceloffset" in Quake.
+//                             Possible values: Accepts any positive floating point number
+//                             Default: 0.0
+//
+// QuakeSensCap              - Equivalent to "cl_mousesenscap" in Quake.
+//                             Possible values: Accepts any positive floating point number. 0 = no cap
+//                             Default: 0.0
+//
+// Verbose                   - Enables a verbose output mode on the terminal.
+//                             Possible values: None
+//                             Default: Disabled
 
-windowsVersion = 7
-mouseSensitivity = 1.00
-acceleration = 1
-subPixelation = 1
-screenResolution = 129.58394
-screenRefreshRate = 60
-thresholdsX = 0.0 0.43 1.25 3.86 40.0
-thresholdsY = 0.0 1.37 5.30 24.30 568.0
-//verbose
+Sensitivity = 1.00
+Acceleration = 7
+WindowsScreenResolution = 129.58394
+WindowsScreenRefreshRate = 60
+WindowsThresholdsX = 0.0 0.43 1.25 3.86 40.0
+WindowsThresholdsY = 0.0 1.37 5.30 24.30 568.0
+//Verbose
