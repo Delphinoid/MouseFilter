@@ -23,22 +23,6 @@
 #define abs(_a)	((_a >= 0) ? _a : -_a)
 #endif
 
-unsigned char substringHelper(char *strTarget, const char *strCopy, unsigned int pos, unsigned int length){
-	if(pos + length <= strlen(strCopy)){
-		unsigned int d;
-		for(d = 0; d < length; d++){
-			if(strCopy[pos + d] == '\n'){
-				d = length;
-			}else{
-				strTarget[d] = strCopy[pos + d];
-			}
-		}
-		strTarget[length] = '\0';
-		return 1;
-	}
-	return 0;
-}
-
 void spLoad(settingsProfile *profile, const char *cfgPath){
 
 	/* Set defaults */
@@ -78,6 +62,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	char lineFeed[1024];
 	char *line;
 	char compare[1024];
+	unsigned int lineLength;
 
 
 	if(serverConfig != NULL){
@@ -86,28 +71,37 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			fgets(lineFeed, sizeof(lineFeed), serverConfig);
 			lineFeed[strcspn(lineFeed, "\r\n")] = 0;
 			line = lineFeed;
+			lineLength = strlen(line);
 
 			// Remove any comments from the line
 			char *commentPos = strstr(line, "//");
 			if(commentPos != NULL){
+				lineLength -= commentPos-line;
 				commentPos = '\0';
 			}
-			// Remove any indentations from the line
+			// Remove any indentations from the line, as well as any trailing spaces and tabs
 			unsigned int d;
-			for(d = 0; d < strlen(line); d++){
-				if(line[d] != '\t' && line[d] != ' '){
+			unsigned char doneFront = 0, doneEnd = 0;
+			for(d = 0; (d < lineLength && !doneFront && !doneEnd); d++){
+				if(!doneFront && line[d] != '\t' && line[d] != ' '){
 					line += d;
-					d = strlen(line);
+					lineLength -= d;
+					doneFront = 1;
+				}
+				if(!doneEnd && d > 1 && d < lineLength && line[lineLength-d] != '\t' && line[lineLength-d] != ' '){
+					line[lineLength-d-1] = '\0';
+					lineLength -= d;
+					doneEnd = 1;
 				}
 			}
 
-			if(strlen(line) >= 15 && substringHelper(compare, line, 0, 14) && strcmp(compare, "Sensitivity = ") == 0){
+			if(lineLength >= 15 && strncpy(compare, line, 14) && (compare[14] = '\0') == 0 && strcmp(compare, "Sensitivity = ") == 0){
 				float tempFloat = strtof(line+14, NULL);
 				if(tempFloat > 0.0f){
 					profile->sensitivity = tempFloat;
 				}
 
-			}else if(strlen(line) >= 16 && substringHelper(compare, line, 0, 15) && strcmp(compare, "Acceleration = ") == 0){
+			}else if(lineLength >= 16 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "Acceleration = ") == 0){
 				if(strcmp(line+15, "XP") == 0){
 					profile->acceleration = 1;
 				}else if(strcmp(line+15, "Vista") == 0){
@@ -118,7 +112,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->acceleration = 4;
 				}
 
-			}else if(strlen(line) >= 11 && substringHelper(compare, line, 0, 10) && strcmp(compare, "InvertX = ") == 0){
+			}else if(lineLength >= 11 && strncpy(compare, line, 10) && (compare[10] = '\0') == 0 && strcmp(compare, "InvertX = ") == 0){
 				if(strcmp(line+10, "FALSE") == 0){
 					profile->invertX = 0;
 				}else if(strcmp(line+10, "0") == 0){
@@ -129,7 +123,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->invertX = 1;
 				}
 
-			}else if(strlen(line) >= 11 && substringHelper(compare, line, 0, 10) && strcmp(compare, "InvertY = ") == 0){
+			}else if(lineLength >= 11 && strncpy(compare, line, 10) && (compare[10] = '\0') == 0 && strcmp(compare, "InvertY = ") == 0){
 				if(strcmp(line+10, "FALSE") == 0){
 					profile->invertY = 0;
 				}else if(strcmp(line+10, "0") == 0){
@@ -140,19 +134,19 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->invertY = 1;
 				}
 
-			}else if(strlen(line) >= 27 && substringHelper(compare, line, 0, 26) && strcmp(compare, "WindowsScreenResolution = ") == 0){
+			}else if(lineLength >= 27 && strncpy(compare, line, 26) && (compare[26] = '\0') == 0 && strcmp(compare, "WindowsScreenResolution = ") == 0){
 				float tempFloat = strtof(line+26, NULL);
 				if(tempFloat > 0.0f){
 					profile->winScreenResolution = tempFloat;
 				}
 
-			}else if(strlen(line) >= 28 && substringHelper(compare, line, 0, 27) && strcmp(compare, "WindowsScreenRefreshRate = ") == 0){
+			}else if(lineLength >= 28 && strncpy(compare, line, 27) && (compare[27] = '\0') == 0 && strcmp(compare, "WindowsScreenRefreshRate = ") == 0){
 				int tempInt = strtol(line+20, NULL, 10);
 				if(tempInt > 0){
 					profile->winScreenRefreshRate = (unsigned int)tempInt;
 				}
 
-			}else if(strlen(line) >= 24 && substringHelper(compare, line, 0, 23) && strcmp(compare, "WindowsSubPixelation = ") == 0){
+			}else if(lineLength >= 24 && strncpy(compare, line, 23) && (compare[23] = '\0') == 0 && strcmp(compare, "WindowsSubPixelation = ") == 0){
 				if(strcmp(line+23, "FALSE") == 0){
 					profile->winSubPixelation = 0;
 				}else if(strcmp(line+23, "0") == 0){
@@ -163,7 +157,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->winSubPixelation = 1;
 				}
 
-			}else if(strlen(line) >= 30 && substringHelper(compare, line, 0, 21) && strcmp(compare, "WindowsThresholdsX = ") == 0){
+			}else if(lineLength >= 30 && strncpy(compare, line, 21) && (compare[21] = '\0') == 0 && strcmp(compare, "WindowsThresholdsX = ") == 0){
 				float tempThresholds[5];
 				int tokenNum = 0;
 				char *token = strtok(line+21, " ");
@@ -182,7 +176,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 
-			}else if(strlen(line) >= 30 && substringHelper(compare, line, 0, 21) && strcmp(compare, "WindowsThresholdsY = ") == 0){
+			}else if(lineLength >= 30 && strncpy(compare, line, 21) && (compare[21] = '\0') == 0 && strcmp(compare, "WindowsThresholdsX = ") == 0){
 				float tempThresholds[5];
 				int tokenNum = 0;
 				char *token = strtok(line+21, " ");
@@ -201,31 +195,31 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 
-			}else if(strlen(line) >= 14 && substringHelper(compare, line, 0, 13) && strcmp(compare, "QuakeAccel = ") == 0){
+			}else if(lineLength >= 14 && strncpy(compare, line, 13) && (compare[13] = '\0') == 0 && strcmp(compare, "QuakeAccel = ") == 0){
 				float tempFloat = strtof(line+13, NULL);
 				if(tempFloat >= 0.0f){
 					profile->quakeAccel = tempFloat;
 				}
 
-			}else if(strlen(line) >= 19 && substringHelper(compare, line, 0, 18) && strcmp(compare, "QuakeAccelPower = ") == 0){
+			}else if(lineLength >= 19 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "QuakeAccelPower = ") == 0){
 				float tempFloat = strtof(line+18, NULL);
 				if(tempFloat >= 0.0f){
 					profile->quakePower = tempFloat;
 				}
 
-			}else if(strlen(line) >= 20 && substringHelper(compare, line, 0, 19) && strcmp(compare, "QuakeAccelOffset = ") == 0){
+			}else if(lineLength >= 20 && strncpy(compare, line, 19) && (compare[19] = '\0') == 0 && strcmp(compare, "QuakeAccelOffset = ") == 0){
 				float tempFloat = strtof(line+19, NULL);
 				if(tempFloat >= 0.0f){
 					profile->quakeOffset = tempFloat;
 				}
 
-			}else if(strlen(line) >= 16 && substringHelper(compare, line, 0, 15) && strcmp(compare, "QuakeSensCap = ") == 0){
+			}else if(lineLength >= 16 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "QuakeSensCap = ") == 0){
 				float tempFloat = strtof(line+15, NULL);
 				if(tempFloat >= 0.0f){
 					profile->quakeCap = tempFloat;
 				}
 
-			}else if(strlen(line) >= 7 && substringHelper(compare, line, 0, 7) && strcmp(compare, "Verbose") == 0){
+			}else if(lineLength >= 7 && strncpy(compare, line, 7) && (compare[7] = '\0') == 0 && strcmp(compare, "Verbose") == 0){
 				profile->verbose = 1;
 			}
 
