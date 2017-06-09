@@ -9,17 +9,17 @@
 //                             Possible values: Accepts any positive, non-zero floating point number
 //                             Default: 1.0
 //
+// YawMultiplier             - A flat multiplier applied to the horizontal mouse delta after every other operation (except for sub-pixelation calculations). Very useful for people using Windows acceleration, as it won't modify the curve like changing the "Sensitivity" value does.
+//                             Possible values: Accepts any floating point number. Negative values will invert horizontal mouse movement, and using 0 will disable the feature.
+//                             Default: 0
+//
+// PitchMultiplier           - A flat multiplier applied to the vertical mouse delta after every other operation (except for sub-pixelation calculations). Very useful for people using Windows acceleration, as it won't modify the curve like changing the "Sensitivity" value does.
+//                             Possible values: Accepts any floating point number. Negative values will invert vertical mouse movement, and using 0 will disable the feature.
+//                             Default: 0
+//
 // Acceleration              - Which method of accel to use: none, Windows XP, Windows Vista, Windows 7 or Quake
 //                             Possible values: XP (Windows XP style enhanced pointer precision), Vista (Windows Vista style enhanced pointer precision), 7 (Windows 7 style enhanced pointer precision), Quake (Quake acceleration)
 //                             Default: 0 (none)
-//
-// InvertX                   - Whether or not horizontal mouse movement is inverted.
-//                             Possible values: FALSE, 0 (off), TRUE, 1 (on)
-//                             Default: 0
-//
-// InvertY                   - Whether or not vertical mouse movement is inverted.
-//                             Possible values: FALSE, 0 (off), TRUE, 1 (on)
-//                             Default: 0
 //
 // WindowsScreenResolution   - The resolution of the screen, in PPI. Used with enhanced pointer precision.
 //                             Possible values: Accepts any non-zero unsigned integer

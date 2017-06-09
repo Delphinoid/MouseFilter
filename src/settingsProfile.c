@@ -26,34 +26,34 @@
 void spLoad(settingsProfile *profile, const char *cfgPath){
 
 	/* Set defaults */
-	profile->sensitivity = 1.0f;
+	profile->sensitivity = 1.f;
+	profile->yawMultiplier = 0.f;
+	profile->pitchMultiplier = 0.f;
 	profile->acceleration = 0;
-	profile->invertX = 0;
-	profile->invertY = 0;
 	profile->previousSegmentIndex = 0;
 	profile->FINDSEGMENT = -1;
-	profile->pixelGain = 0.0f;
+	profile->pixelGain = 0.f;
 	profile->previousMouseDeltaX = 0;
 	profile->previousMouseDeltaY = 0;
-	profile->previousMouseXRemainder = 0.0f;
-	profile->previousMouseYRemainder = 0.0f;
+	profile->previousMouseXRemainder = 0.f;
+	profile->previousMouseYRemainder = 0.f;
 	profile->winScreenResolution = 96;
 	profile->winScreenRefreshRate = 60;
 	profile->winSubPixelation = 1;
-	profile->winThresholdsX[0] = 0.0f;
+	profile->winThresholdsX[0] = 0.f;
 	profile->winThresholdsX[1] = 0.43f;
 	profile->winThresholdsX[2] = 1.25f;
 	profile->winThresholdsX[3] = 3.86f;
-	profile->winThresholdsX[4] = 40.0f;
-	profile->winThresholdsY[0] = 0.0f;
+	profile->winThresholdsX[4] = 40.f;
+	profile->winThresholdsY[0] = 0.f;
 	profile->winThresholdsY[1] = 1.37f;
 	profile->winThresholdsY[2] = 5.30f;
 	profile->winThresholdsY[3] = 24.30f;
-	profile->winThresholdsY[4] = 568.0f;
-	profile->quakeAccel = 1.0f;
-	profile->quakePower = 1.0f;
-	profile->quakeOffset = 0.0f;
-	profile->quakeCap = 0.0f;
+	profile->winThresholdsY[4] = 568.f;
+	profile->quakeAccel = 1.f;
+	profile->quakePower = 1.f;
+	profile->quakeOffset = 0.f;
+	profile->quakeCap = 0.f;
 	profile->verbose = 0;
 
 
@@ -103,13 +103,21 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			line += newOffset;
 			lineLength -= newOffset;
 
-			if(lineLength >= 15 && strncpy(compare, line, 14) && (compare[14] = '\0') == 0 && strcmp(compare, "Sensitivity = ") == 0){
+			if(lineLength > 14 && strncpy(compare, line, 14) && (compare[14] = '\0') == 0 && strcmp(compare, "Sensitivity = ") == 0){
 				float tempFloat = strtof(line+14, NULL);
-				if(tempFloat > 0.0f){
+				if(tempFloat > 0.f){
 					profile->sensitivity = tempFloat;
 				}
 
-			}else if(lineLength >= 16 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "Acceleration = ") == 0){
+			}else if(lineLength > 16 && strncpy(compare, line, 16) && (compare[16] = '\0') == 0 && strcmp(compare, "YawMultiplier = ") == 0){
+				float tempFloat = strtof(line+16, NULL);
+				profile->yawMultiplier = tempFloat;
+
+			}else if(lineLength > 18 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "PitchMultiplier = ") == 0){
+				float tempFloat = strtof(line+18, NULL);
+				profile->pitchMultiplier = tempFloat;
+
+			}else if(lineLength > 15 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "Acceleration = ") == 0){
 				if(strcmp(line+15, "XP") == 0){
 					profile->acceleration = 1;
 				}else if(strcmp(line+15, "Vista") == 0){
@@ -120,41 +128,19 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->acceleration = 4;
 				}
 
-			}else if(lineLength >= 11 && strncpy(compare, line, 10) && (compare[10] = '\0') == 0 && strcmp(compare, "InvertX = ") == 0){
-				if(strcmp(line+10, "FALSE") == 0){
-					profile->invertX = 0;
-				}else if(strcmp(line+10, "0") == 0){
-					profile->invertX = 0;
-				}else if(strcmp(line+10, "TRUE") == 0){
-					profile->invertX = 1;
-				}else if(strcmp(line+10, "1") == 0){
-					profile->invertX = 1;
-				}
-
-			}else if(lineLength >= 11 && strncpy(compare, line, 10) && (compare[10] = '\0') == 0 && strcmp(compare, "InvertY = ") == 0){
-				if(strcmp(line+10, "FALSE") == 0){
-					profile->invertY = 0;
-				}else if(strcmp(line+10, "0") == 0){
-					profile->invertY = 0;
-				}else if(strcmp(line+10, "TRUE") == 0){
-					profile->invertY = 1;
-				}else if(strcmp(line+10, "1") == 0){
-					profile->invertY = 1;
-				}
-
-			}else if(lineLength >= 27 && strncpy(compare, line, 26) && (compare[26] = '\0') == 0 && strcmp(compare, "WindowsScreenResolution = ") == 0){
+			}else if(lineLength > 26 && strncpy(compare, line, 26) && (compare[26] = '\0') == 0 && strcmp(compare, "WindowsScreenResolution = ") == 0){
 				float tempFloat = strtof(line+26, NULL);
-				if(tempFloat > 0.0f){
+				if(tempFloat > 0.f){
 					profile->winScreenResolution = tempFloat;
 				}
 
-			}else if(lineLength >= 28 && strncpy(compare, line, 27) && (compare[27] = '\0') == 0 && strcmp(compare, "WindowsScreenRefreshRate = ") == 0){
+			}else if(lineLength > 27 && strncpy(compare, line, 27) && (compare[27] = '\0') == 0 && strcmp(compare, "WindowsScreenRefreshRate = ") == 0){
 				int tempInt = strtol(line+20, NULL, 10);
 				if(tempInt > 0){
 					profile->winScreenRefreshRate = (unsigned int)tempInt;
 				}
 
-			}else if(lineLength >= 24 && strncpy(compare, line, 23) && (compare[23] = '\0') == 0 && strcmp(compare, "WindowsSubPixelation = ") == 0){
+			}else if(lineLength > 23 && strncpy(compare, line, 23) && (compare[23] = '\0') == 0 && strcmp(compare, "WindowsSubPixelation = ") == 0){
 				if(strcmp(line+23, "FALSE") == 0){
 					profile->winSubPixelation = 0;
 				}else if(strcmp(line+23, "0") == 0){
@@ -203,27 +189,27 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 
-			}else if(lineLength >= 14 && strncpy(compare, line, 13) && (compare[13] = '\0') == 0 && strcmp(compare, "QuakeAccel = ") == 0){
+			}else if(lineLength > 13 && strncpy(compare, line, 13) && (compare[13] = '\0') == 0 && strcmp(compare, "QuakeAccel = ") == 0){
 				float tempFloat = strtof(line+13, NULL);
-				if(tempFloat >= 0.0f){
+				if(tempFloat >= 0.f){
 					profile->quakeAccel = tempFloat;
 				}
 
-			}else if(lineLength >= 19 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "QuakeAccelPower = ") == 0){
+			}else if(lineLength > 18 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "QuakeAccelPower = ") == 0){
 				float tempFloat = strtof(line+18, NULL);
-				if(tempFloat >= 0.0f){
+				if(tempFloat >= 0.f){
 					profile->quakePower = tempFloat;
 				}
 
-			}else if(lineLength >= 20 && strncpy(compare, line, 19) && (compare[19] = '\0') == 0 && strcmp(compare, "QuakeAccelOffset = ") == 0){
+			}else if(lineLength > 19 && strncpy(compare, line, 19) && (compare[19] = '\0') == 0 && strcmp(compare, "QuakeAccelOffset = ") == 0){
 				float tempFloat = strtof(line+19, NULL);
-				if(tempFloat >= 0.0f){
+				if(tempFloat >= 0.f){
 					profile->quakeOffset = tempFloat;
 				}
 
-			}else if(lineLength >= 16 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "QuakeSensCap = ") == 0){
+			}else if(lineLength > 15 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "QuakeSensCap = ") == 0){
 				float tempFloat = strtof(line+15, NULL);
-				if(tempFloat >= 0.0f){
+				if(tempFloat >= 0.f){
 					profile->quakeCap = tempFloat;
 				}
 
@@ -242,9 +228,9 @@ void spPrintSettings(settingsProfile *profile){
 	printf("Profile loaded\n");
 	printf("-------------------------------------------------------------------------------\n");
 	printf("Sensitivity: %f\n", profile->sensitivity);
+	printf("Yaw Multiplier: %f\n", profile->yawMultiplier);
+	printf("Pitch Multiplier: %f\n", profile->pitchMultiplier);
 	printf("Acceleration method: %s\n", profile->acceleration == 1 ? "Windows XP Enhanced Pointer Precision" : (profile->acceleration == 2 ? "Windows Vista Enhanced Pointer Precision" : (profile->acceleration == 3 ? "Windows 7 Enhanced Pointer Precision" : (profile->acceleration == 4 ? "Quake Acceleration" : "None"))));
-	printf("Invert X: %s\n", profile->invertX == 0 ? "Off" : "On");
-	printf("Invert Y: %s\n", profile->invertY == 0 ? "Off" : "On");
 	if(profile->acceleration == 1 || profile->acceleration == 2 || profile->acceleration == 3){
 		printf("Screen resolution: %f PPI\n", profile->winScreenResolution);
 	}
@@ -289,7 +275,7 @@ float spSmoothMouseGain(settingsProfile *profile, float deviceSpeed, int *segmen
 	                         00,00,38,02,00,00,00,00
 	*/
 
-	if(deviceSpeed == 0.0f){
+	if(deviceSpeed == 0.f){
 		*segment = 0;
 		return deviceSpeed;
 	}
@@ -324,16 +310,16 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 		float screenResolutionFactor;
 		if(profile->acceleration == 3){
 			// Fixed acceleration method
-			screenResolutionFactor = (float)profile->winScreenResolution / 150.0f;
+			screenResolutionFactor = (float)profile->winScreenResolution / 150.f;
 		}else{
 			// Handle last movement's remainders as XP does
 			if(profile->acceleration == 1){
 				if(Sign(mouseDeltaX) != Sign(profile->previousMouseDeltaX) || mouseDeltaX == 0){
-					profile->previousMouseXRemainder = 0.0f;
+					profile->previousMouseXRemainder = 0.f;
 				}
 				profile->previousMouseDeltaX = mouseDeltaX;
 				if(Sign(mouseDeltaY) != Sign(profile->previousMouseDeltaY) || mouseDeltaY == 0){
-					profile->previousMouseYRemainder = 0.0f;
+					profile->previousMouseYRemainder = 0.f;
 				}
 				profile->previousMouseDeltaY = mouseDeltaY;
 
@@ -341,13 +327,13 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 			}else if(profile->acceleration == 2){
 				if(mouseDeltaX != 0){
 					if(Sign(mouseDeltaX) != Sign(profile->previousMouseDeltaX)){
-						profile->previousMouseXRemainder = 0.0f;
+						profile->previousMouseXRemainder = 0.f;
 					}
 					profile->previousMouseDeltaX = mouseDeltaX;
 				}
 				if(mouseDeltaY != 0){
 					if(Sign(mouseDeltaY) != Sign(profile->previousMouseDeltaY)){
-						profile->previousMouseYRemainder = 0.0f;
+						profile->previousMouseYRemainder = 0.f;
 					}
 					profile->previousMouseDeltaY = mouseDeltaY;
 				}
@@ -357,7 +343,7 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 		}
 
 		// Calculate accelerated mouse deltas
-		float mouseMag = max(abs(mouseDeltaX), abs(mouseDeltaY)) + min(abs(mouseDeltaX), abs(mouseDeltaY)) / 2.0f;
+		float mouseMag = max(abs(mouseDeltaX), abs(mouseDeltaY)) + min(abs(mouseDeltaX), abs(mouseDeltaY)) / 2.f;
 		int currentSegmentIndex = profile->FINDSEGMENT;
 		profile->pixelGain = screenResolutionFactor
 		                     * profile->sensitivity
@@ -370,7 +356,7 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 			                                      * profile->sensitivity
 			                                      * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
 			                                      / 3.5f;
-			profile->pixelGain = (profile->pixelGain + pixelGainUsingPreviousSegment) / 2.0f;
+			profile->pixelGain = (profile->pixelGain + pixelGainUsingPreviousSegment) / 2.f;
 		}
 		profile->previousSegmentIndex = currentSegmentIndex;
 		accelerationMultiplier = profile->pixelGain;
@@ -379,11 +365,19 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 	}else if(profile->acceleration == 4){
 
 		float velocity = sqrtf(mouseDeltaX*mouseDeltaX+mouseDeltaY*mouseDeltaY);
-		accelerationMultiplier = profile->sensitivity + powf(profile->quakeAccel*(velocity-profile->quakeOffset), profile->quakePower-1.0f);
+		accelerationMultiplier = profile->sensitivity + powf(profile->quakeAccel*(velocity-profile->quakeOffset), profile->quakePower-1.f);
 
 	}
 
-	// Calculate accelerated mouse deltas
+	// Apply yaw and pitch multipliers
+	if(profile->yawMultiplier != 0.f){
+		mouseDeltaX *= profile->yawMultiplier;
+	}
+	if(profile->pitchMultiplier != 0.f){
+		mouseDeltaY *= profile->pitchMultiplier;
+	}
+
+	// Calculate full mouse deltas, including remainders
 	float mouseXplusRemainder = mouseDeltaX * accelerationMultiplier + profile->previousMouseXRemainder;
 	float mouseYplusRemainder = mouseDeltaY * accelerationMultiplier + profile->previousMouseYRemainder;
 
@@ -402,15 +396,15 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 		if(!profile->winSubPixelation && fabs(mouseYplusRemainder) <= abs(mouseDeltaY)){
 			// XP & Vista when disableSubPixelation (never set, AFAIK)
 			*mouseY = mouseDeltaY;
-			profile->previousMouseYRemainder = 0.0f;
-			profile->pixelGain = 1.0f;
+			profile->previousMouseYRemainder = 0.f;
+			profile->pixelGain = 1.f;
 		}else{
 			// XP & Vista
 			*mouseY = (int)floor(mouseYplusRemainder);
 			profile->previousMouseYRemainder = mouseYplusRemainder - *mouseY;
 		}
 
-	}else if(profile->acceleration == 0 && accelerationMultiplier == 1.0f){
+	}else if(profile->acceleration == 0 && accelerationMultiplier == 1.f){
 		// Slider = 0, no remainder to handle
 		*mouseX = mouseDeltaX;
 		*mouseY = mouseDeltaY;
@@ -422,7 +416,7 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 		}else{
 			*mouseX = -(int)floor(-mouseXplusRemainder);
 		}
-		if(mouseYplusRemainder >= 0.0f){
+		if(mouseYplusRemainder >= 0.f){
 			*mouseY = (int)floor(mouseYplusRemainder);
 		}else{
 			*mouseY = -(int)floor(-mouseYplusRemainder);
@@ -430,14 +424,6 @@ inline void spUpdate(settingsProfile *profile, int mouseDeltaX, int mouseDeltaY,
 		profile->previousMouseXRemainder = mouseXplusRemainder - *mouseX;
 		profile->previousMouseYRemainder = mouseYplusRemainder - *mouseY;
 
-	}
-
-	// Apply inversions
-	if(profile->invertX){
-		*mouseX = -*mouseX;
-	}
-	if(profile->invertY){
-		*mouseY = -*mouseY;
 	}
 
 	// Verbose terminal output

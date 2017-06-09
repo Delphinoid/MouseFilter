@@ -12,9 +12,9 @@
 typedef struct {
 
 	float sensitivity;  // Sensitivity multiplier
+	float yawMultiplier;
+	float pitchMultiplier;
 	unsigned int acceleration;  // Type of acceleration: 0 = none, 1 = XP, 2 = Vista, 3 = 7, 4 = Quake
-	unsigned char invertX;  // Whether or not horizontal movement is inverted
-	unsigned char invertY;  // Whether or not vertical movement is inverted
 	int previousSegmentIndex;  // used for interpolation
 	int FINDSEGMENT;  // used for interpolation
 	float pixelGain;
