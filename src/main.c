@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-	interception_destroy_context(context);
+	//interception_destroy_context(context);
 	return 0;
 
 }

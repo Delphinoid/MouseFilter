@@ -11,32 +11,28 @@
 
 typedef struct {
 
-	float sensitivity;  // Sensitivity multiplier
-	float yawMultiplier;
-	float pitchMultiplier;
-	unsigned int acceleration;  // Type of acceleration: 0 = none, 1 = XP, 2 = Vista, 3 = 7, 4 = Quake
+	unsigned int windowsVersion;  // 0 = XP, 1 = Vista, 2 = 7
+	float mouseSensitivity;  // Sensitivity multiplier
+	unsigned int enhancePointerPrecision;  // Whether or not threshold-based mouse acceleration is enabled
+	unsigned int acceleration;    // Whether or not we're using the patched mouse acceleration method
+	unsigned int subPixelation;  // Whether or not sub-pixelation is enabled
 	int previousSegmentIndex;  // used for interpolation
 	int FINDSEGMENT;  // used for interpolation
-	float pixelGain;
-	int previousMouseDeltaX;
-	int previousMouseDeltaY;
+	int previousMouseRawX;
+	int previousMouseRawY;
 	float previousMouseXRemainder;
 	float previousMouseYRemainder;
-	float winScreenResolution;          // Screen resolution, measured in PPI. Used with enhanced pointer precision
-	unsigned int winScreenRefreshRate;  // Screen refresh rate, measured in hertz. Used with Windows 7 enhanced pointer precision
-	unsigned char winSubPixelation;     // Whether or not sub-pixelation is forced. Used with XP and Vista enhanced pointer precision
-	float winThresholdsX[5];            // Thresholds for mouse speed. Used with enhanced pointer precision
-	float winThresholdsY[5];            // Thresholds for resulting pointer speed. Used with enhanced pointer precision
-	float quakeAccel;   // cl_mouseaccel
-	float quakePower;   // cl_mouseaccelpower
-	float quakeOffset;  // cl_mouseacceloffset
-	float quakeCap;     // cl_mousesenscap
-	unsigned char verbose;  // When set to 1, enables a verbose terminal output
+	float screenResolution;   // PPI
+	unsigned int screenRefreshRate;  // Hz
+	float pixelGain;
+	float thresholdsX[5];  // Thresholds for mouse speed
+	float thresholdsY[5];  // Thresholds for resulting pointer speed
+	unsigned int verbose;  // When set to 1, enables a verbose terminal output
 
 } settingsProfile;
 
 void spLoad(settingsProfile *profile, const char *cfgPath);
 void spPrintSettings(settingsProfile *profile);
-extern inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, int *mouseX, int *mouseY);
+extern inline void spUpdate(settingsProfile *profile, int mouseRawX, int mouseRawY, float *mouseX, float *mouseY);
 
 #endif
