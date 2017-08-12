@@ -117,7 +117,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 							tokenNum++;
 							break;
 						}
-						tempThresholds[tokenNum] = strtof(token, NULL);
+						tempThresholds[tokenNum] = strtod(token, NULL);
 						token = strtok(NULL, " ");
 						tokenNum++;
 					}
@@ -137,7 +137,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 							tokenNum++;
 							break;
 						}
-						tempThresholds[tokenNum] = strtof(token, NULL);
+						tempThresholds[tokenNum] = strtod(token, NULL);
 						token = strtok(NULL, " ");
 						tokenNum++;
 					}
@@ -165,14 +165,14 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 				spSubstringHelper(compare, line, 0, 19);
 				if(strcmp(compare, "mouseSensitivity = ") == 0){
 					spSubstringHelper(lineData, line, 19, strlen(line) - 20);
-					float tempFloat = strtof(lineData, NULL);
+					float tempFloat = strtod(lineData, NULL);
 					if(tempFloat > 0.0f){
 						profile->mouseSensitivity = tempFloat;
 					}
 
 				}else if(strcmp(compare, "screenResolution = ") == 0){
 					spSubstringHelper(lineData, line, 19, strlen(line) - 20);
-					float tempFloat = strtof(lineData, NULL);
+					float tempFloat = strtod(lineData, NULL);
 					if(tempFloat > 0.0f){
 						profile->screenResolution = tempFloat;
 					}
