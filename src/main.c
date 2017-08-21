@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 		if(interception_is_mouse(device)){
 			// Intercept input from mouse (in mickeys)
 			InterceptionMouseStroke *mstroke = (InterceptionMouseStroke*)&stroke;
-			if(!(mstroke->flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE)){  // Checks for mouse movement
+			if((mstroke->flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE) == 0){  // Checks for mouse movement
 				// Modifies mouse input based on the profile loaded
 				spUpdate(&profile, mstroke->x, mstroke->y, &(mstroke->x), &(mstroke->y));
 			}
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-	//interception_destroy_context(context);
+	interception_destroy_context(context);
 	return 0;
 
 }
