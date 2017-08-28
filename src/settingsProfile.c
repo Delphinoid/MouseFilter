@@ -89,7 +89,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			unsigned char doneFront = 0, doneEnd = 0;
 			unsigned int newOffset = 0;
 			unsigned int i;
-			for(i = 0; (i < lineLength && !doneFront && !doneEnd); i++){
+			for(i = 0; (i < lineLength && !doneFront && !doneEnd); ++i){
 				if(!doneFront && line[i] != '\t' && line[i] != ' '){
 					newOffset = i;
 					doneFront = 1;
@@ -161,15 +161,15 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 				char *token = strtok(line+21, " ");
 				while(token){
 					if(tokenNum == 5){
-						tokenNum++;
+						++tokenNum;
 						break;
 					}
 					tempThresholds[tokenNum] = strtod(token, NULL);
 					token = strtok(NULL, " ");
-					tokenNum++;
+					++tokenNum;
 				}
 				if(tokenNum == 5){
-					for(tokenNum--; tokenNum >= 0; tokenNum--){
+					for(--tokenNum; tokenNum >= 0; --tokenNum){
 						profile->winThresholdsX[tokenNum] = tempThresholds[tokenNum];
 					}
 				}
@@ -180,15 +180,15 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 				char *token = strtok(line+21, " ");
 				while(token){
 					if(tokenNum == 5){
-						tokenNum++;
+						++tokenNum;
 						break;
 					}
 					tempThresholds[tokenNum] = strtod(token, NULL);
 					token = strtok(NULL, " ");
-					tokenNum++;
+					++tokenNum;
 				}
 				if(tokenNum == 5){
-					for(tokenNum--; tokenNum >= 0; tokenNum--){
+					for(--tokenNum; tokenNum >= 0; --tokenNum){
 						profile->winThresholdsY[tokenNum] = tempThresholds[tokenNum];
 					}
 				}
@@ -294,7 +294,7 @@ static inline float spSmoothMouseGain(const settingsProfile *profile, const floa
 	int i;
 	if(*segment == profile->FINDSEGMENT){
 
-		for(i = 0; i < 3; i++){
+		for(i = 0; i < 3; ++i){
 			if(deviceSpeed < profile->winThresholdsX[i+1]){
 				break;
 			}
