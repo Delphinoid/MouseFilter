@@ -62,7 +62,6 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	FILE *serverConfig = fopen(cfgPath, "r");
 	char lineFeed[1024];
 	char *line;
-	char compare[1024];
 	unsigned int lineLength;
 
 
@@ -103,25 +102,25 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 			line += newOffset;
 			lineLength -= newOffset;
 
-			if(lineLength > 14 && strncpy(compare, line, 14) && (compare[14] = '\0') == 0 && strcmp(compare, "Sensitivity = ") == 0){
+			if(lineLength > 14 && strncmp(line, "Sensitivity = ", 14) == 0){
 				const float tempFloat = strtod(line+14, NULL);
 				if(tempFloat > 0.f){
 					profile->sensitivity = tempFloat;
 				}
 
-			}else if(lineLength > 16 && strncpy(compare, line, 16) && (compare[16] = '\0') == 0 && strcmp(compare, "DPIMultiplier = ") == 0){
+			}else if(lineLength > 16 && strncmp(line, "DPIMultiplier = ", 16) == 0){
 				const float tempFloat = strtod(line+16, NULL);
 				profile->dpiMultiplier = tempFloat;
 
-			}else if(lineLength > 16 && strncpy(compare, line, 16) && (compare[16] = '\0') == 0 && strcmp(compare, "YawMultiplier = ") == 0){
+			}else if(lineLength > 16 && strncmp(line, "YawMultiplier = ", 16) == 0){
 				const float tempFloat = strtod(line+16, NULL);
 				profile->yawMultiplier = tempFloat;
 
-			}else if(lineLength > 18 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "PitchMultiplier = ") == 0){
+			}else if(lineLength > 18 && strncmp(line, "PitchMultiplier = ", 18) == 0){
 				const float tempFloat = strtod(line+18, NULL);
 				profile->pitchMultiplier = tempFloat;
 
-			}else if(lineLength > 15 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "Acceleration = ") == 0){
+			}else if(lineLength > 15 && strncmp(line, "Acceleration = ", 15) == 0){
 				if(strcmp(line+15, "XP") == 0){
 					profile->acceleration = 1;
 				}else if(strcmp(line+15, "Vista") == 0){
@@ -132,19 +131,19 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->acceleration = 4;
 				}
 
-			}else if(lineLength > 26 && strncpy(compare, line, 26) && (compare[26] = '\0') == 0 && strcmp(compare, "WindowsScreenResolution = ") == 0){
+			}else if(lineLength > 26 && strncmp(line, "WindowsScreenResolution = ", 26) == 0){
 				const float tempFloat = strtod(line+26, NULL);
 				if(tempFloat > 0.f){
 					profile->winScreenResolution = tempFloat;
 				}
 
-			}else if(lineLength > 27 && strncpy(compare, line, 27) && (compare[27] = '\0') == 0 && strcmp(compare, "WindowsScreenRefreshRate = ") == 0){
+			}else if(lineLength > 27 && strncmp(line, "WindowsScreenRefreshRate = ", 27) == 0){
 				const int tempInt = strtol(line+20, NULL, 10);
 				if(tempInt > 0){
 					profile->winScreenRefreshRate = (unsigned int)tempInt;
 				}
 
-			}else if(lineLength > 23 && strncpy(compare, line, 23) && (compare[23] = '\0') == 0 && strcmp(compare, "WindowsSubPixelation = ") == 0){
+			}else if(lineLength > 23 && strncmp(line, "WindowsSubPixelation = ", 23) == 0){
 				if(strcmp(line+23, "FALSE") == 0){
 					profile->winSubPixelation = 0;
 				}else if(strcmp(line+23, "0") == 0){
@@ -155,7 +154,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					profile->winSubPixelation = 1;
 				}
 
-			}else if(lineLength >= 30 && strncpy(compare, line, 21) && (compare[21] = '\0') == 0 && strcmp(compare, "WindowsThresholdsX = ") == 0){
+			}else if(lineLength >= 30 && strncmp(line, "WindowsThresholdsX = ", 21) == 0){
 				float tempThresholds[5];
 				int tokenNum = 0;
 				char *token = strtok(line+21, " ");
@@ -174,7 +173,7 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 
-			}else if(lineLength >= 30 && strncpy(compare, line, 21) && (compare[21] = '\0') == 0 && strcmp(compare, "WindowsThresholdsX = ") == 0){
+			}else if(lineLength >= 30 && strncmp(line, "WindowsThresholdsX = ", 21) == 0){
 				float tempThresholds[5];
 				int tokenNum = 0;
 				char *token = strtok(line+21, " ");
@@ -193,31 +192,31 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 					}
 				}
 
-			}else if(lineLength > 13 && strncpy(compare, line, 13) && (compare[13] = '\0') == 0 && strcmp(compare, "QuakeAccel = ") == 0){
+			}else if(lineLength > 13 && strncmp(line, "QuakeAccel = ", 13) == 0){
 				const float tempFloat = strtod(line+13, NULL);
 				if(tempFloat >= 0.f){
 					profile->quakeAccel = tempFloat;
 				}
 
-			}else if(lineLength > 18 && strncpy(compare, line, 18) && (compare[18] = '\0') == 0 && strcmp(compare, "QuakeAccelPower = ") == 0){
+			}else if(lineLength > 18 && strncmp(line, "QuakeAccelPower = ", 18) == 0){
 				const float tempFloat = strtod(line+18, NULL);
 				if(tempFloat >= 0.f){
 					profile->quakePower = tempFloat;
 				}
 
-			}else if(lineLength > 19 && strncpy(compare, line, 19) && (compare[19] = '\0') == 0 && strcmp(compare, "QuakeAccelOffset = ") == 0){
+			}else if(lineLength > 19 && strncmp(line, "QuakeAccelOffset = ", 19) == 0){
 				const float tempFloat = strtod(line+19, NULL);
 				if(tempFloat >= 0.f){
 					profile->quakeOffset = tempFloat;
 				}
 
-			}else if(lineLength > 15 && strncpy(compare, line, 15) && (compare[15] = '\0') == 0 && strcmp(compare, "QuakeSensCap = ") == 0){
+			}else if(lineLength > 15 && strncmp(line, "QuakeSensCap = ", 15) == 0){
 				const float tempFloat = strtod(line+15, NULL);
 				if(tempFloat >= 0.f){
 					profile->quakeCap = tempFloat;
 				}
 
-			}else if(lineLength >= 7 && strncpy(compare, line, 7) && (compare[7] = '\0') == 0 && strcmp(compare, "Verbose") == 0){
+			}else if(lineLength >= 7 && strncmp(line, "Verbose", 7) == 0){
 				profile->verbose = 1;
 			}
 
