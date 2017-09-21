@@ -51,8 +51,8 @@ void spLoad(settingsProfile *profile, const char *cfgPath){
 	profile->winThresholdsY[2] = 5.30f;
 	profile->winThresholdsY[3] = 24.30f;
 	profile->winThresholdsY[4] = 568.f;
-	profile->quakeAccel = 1.f;
-	profile->quakePower = 1.f;
+	profile->quakeAccel = 0.f;
+	profile->quakePower = 2.f;
 	profile->quakeOffset = 0.f;
 	profile->quakeCap = 0.f;
 	profile->verbose = 0;

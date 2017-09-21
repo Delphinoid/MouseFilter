@@ -47,11 +47,11 @@
 //
 // QuakeAccel                - Equivalent to "cl_mouseaccel" in Quake.
 //                             Possible values: Accepts any positive floating point number
-//                             Default: 1.0
+//                             Default: 0.0
 //
 // QuakeAccelPower           - Equivalent to "cl_mouseaccelpower" in Quake.
 //                             Possible values: Accepts any positive floating point number. Generally, 1 = no accel, 2 = linear accel and 3 = parabolic accel
-//                             Default: 1.0
+//                             Default: 2.0
 //
 // QuakeAccelOffset          - Equivalent to "cl_mouseacceloffset" in Quake.
 //                             Possible values: Accepts any positive floating point number
