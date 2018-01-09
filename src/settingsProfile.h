@@ -41,14 +41,14 @@ typedef struct {
 	float previousMouseYRemainder;
 	float winScreenResolution;          // Screen resolution, measured in PPI. Used with enhanced pointer precision
 	unsigned int winScreenRefreshRate;  // Screen refresh rate, measured in hertz. Used with Windows 7 enhanced pointer precision
-	unsigned char winSubPixelation;     // Whether or not sub-pixelation is forced. Used with XP and Vista enhanced pointer precision
+	signed char winSubPixelation;       // Whether or not sub-pixelation is forced. Used with XP and Vista enhanced pointer precision
 	float winThresholdsX[5];            // Thresholds for mouse speed. Used with enhanced pointer precision
 	float winThresholdsY[5];            // Thresholds for resulting pointer speed. Used with enhanced pointer precision
 	float quakeAccel;   // cl_mouseaccel
 	float quakePower;   // cl_mouseaccelpower
 	float quakeOffset;  // cl_mouseacceloffset
 	float quakeCap;     // cl_mousesenscap
-	unsigned char verbose;  // When set to 1, enables a verbose terminal output
+	signed char verbose;  // When set to 1, enables a verbose terminal output
 
 } settingsProfile;
 
