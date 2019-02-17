@@ -74,7 +74,7 @@ static inline unsigned int fileParseNextLine(FILE *const restrict file, char *co
 
 }
 
-static inline void spInit(settingsProfile *const restrict profile){
+inline void spInit(settingsProfile *const restrict profile){
 
 	/* Set defaults. */
 	profile->sensitivity = 1.f;
@@ -121,7 +121,6 @@ inline void spLoad(settingsProfile *const restrict profile, const char *const re
 	/* Load settings profile. */
 
 	FILE *config;
-	spInit(profile);
 
 	config = fopen(cfgPath, "r");
 	if(config != NULL){

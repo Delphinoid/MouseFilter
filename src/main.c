@@ -16,6 +16,7 @@ int main(int argc, char **argv){
 	interception_set_filter(context, interception_is_mouse, INTERCEPTION_FILTER_MOUSE_MOVE);
 
 	/* Load a settings profile. */
+	spInit(&profile);
 	if(argc > 0){
 		char profilePath[1024];
 		const size_t length = strrchr(argv[0], '\\') + 1 - argv[0];
