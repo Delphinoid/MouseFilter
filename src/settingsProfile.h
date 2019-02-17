@@ -41,6 +41,7 @@ typedef struct {
 
 } settingsProfile;
 
+void spInit(settingsProfile *const restrict profile);
 void spLoad(settingsProfile *const restrict profile, const char *const restrict cfgPath);
 #ifdef SETTINGS_PROFILE_TERMINAL_OUTPUT
 void spPrintSettings(const settingsProfile *const restrict profile);

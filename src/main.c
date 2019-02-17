@@ -1,7 +1,7 @@
 #include <Interception/interception.h>
-#include "utils.h"
 #include "settingsProfile.h"
 #include <string.h>
+#include <windows.h>
 
 int main(int argc, char **argv){
 
@@ -10,12 +10,11 @@ int main(int argc, char **argv){
 	InterceptionDevice device;
 	InterceptionStroke stroke;
 
-	/* Initializing some things for the Interception library. */
-	raise_process_priority();
+	// Initializing some things for the Interception library.
 	context = interception_create_context();
 	interception_set_filter(context, interception_is_mouse, INTERCEPTION_FILTER_MOUSE_MOVE);
 
-	/* Load a settings profile. */
+	// Load a settings profile.
 	spInit(&profile);
 	if(argc > 0){
 		char profilePath[1024];
@@ -32,13 +31,17 @@ int main(int argc, char **argv){
 	spPrintSettings(&profile);
 	#endif
 
-	/* Interception loop. */
+	// Make the process high-priority.
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+
+	// Interception loop.
 	while(interception_receive(context, device = interception_wait(context), &stroke, 1) > 0){
 		if(interception_is_mouse(device)){
-			// Intercept input from mouse (in mickeys)
+			// Intercept input from mouse (in mickeys).
 			InterceptionMouseStroke *mstroke = (InterceptionMouseStroke*)&stroke;
-			if((mstroke->flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE) == 0){  // Checks for mouse movement
-				// Modifies mouse input based on the profile loaded
+			// Check for mouse movement.
+			if((mstroke->flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE) == 0){
+				// Modify mouse input based on the profile loaded.
 				spUpdate(&profile, mstroke->x, mstroke->y, &(mstroke->x), &(mstroke->y));
 			}
 			interception_send(context, device, &stroke, 1);

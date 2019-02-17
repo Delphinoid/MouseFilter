@@ -76,7 +76,10 @@ static inline unsigned int fileParseNextLine(FILE *const restrict file, char *co
 
 inline void spInit(settingsProfile *const restrict profile){
 
-	/* Set defaults. */
+	/*
+	** Set profile defaults.
+	*/
+
 	profile->sensitivity = 1.f;
 	profile->dpiMultiplier = 1.f;
 	profile->yawMultiplier = 1.f;
@@ -118,7 +121,9 @@ inline void spInit(settingsProfile *const restrict profile){
 
 inline void spLoad(settingsProfile *const restrict profile, const char *const restrict cfgPath){
 
-	/* Load settings profile. */
+	/*
+	** Load a settings profile from a file.
+	*/
 
 	FILE *config;
 
@@ -351,13 +356,17 @@ static inline float spSmoothMouseGain(const settingsProfile *const restrict prof
 
 inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, int mouseDeltaY, int *const restrict mouseX, int *const restrict mouseY){
 
+	/*
+	** Manipulate mouse input.
+	*/
+
 	float accelerationMultiplier = profile->sensitivity;
 
-	// Apply the DPI multiplier to match the desired DPI
+	// Apply the DPI multiplier to match the desired DPI.
 	mouseDeltaX *= profile->dpiMultiplier;
 	mouseDeltaY *= profile->dpiMultiplier;
 
-	// Windows enhanced pointer precision
+	// Windows enhanced pointer precision.
 	if(profile->acceleration >= 1 && profile->acceleration <= 3){
 
 		float screenResolutionFactor;
@@ -365,10 +374,10 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 		int currentSegmentIndex;
 
 		if(profile->acceleration == 3){
-			// Fixed acceleration method
+			// Fixed acceleration method.
 			screenResolutionFactor = (float)profile->winScreenResolution / 150.f;
 		}else{
-			// Handle last movement's remainders as XP does
+			// Handle last movement's remainders as XP does.
 			if(profile->acceleration == 1){
 				if(sign(mouseDeltaX) != sign(profile->previousMouseDeltaX) || mouseDeltaX == 0){
 					profile->previousMouseXRemainder = 0.f;
@@ -379,7 +388,7 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 				}
 				profile->previousMouseDeltaY = mouseDeltaY;
 
-			// Handle movement's remainders as Vista does
+			// Handle movement's remainders as Vista does.
 			}else if(profile->acceleration == 2){
 				if(mouseDeltaX != 0){
 					if(sign(mouseDeltaX) != sign(profile->previousMouseDeltaX)){
@@ -394,11 +403,11 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 					profile->previousMouseDeltaY = mouseDeltaY;
 				}
 			}
-			// Original acceleration method
+			// Original acceleration method.
 			screenResolutionFactor = (float)profile->winScreenRefreshRate / (float)profile->winScreenResolution;
 		}
 
-		// Calculate accelerated mouse deltas
+		// Calculate accelerated mouse deltas.
 		mouseMag = max(abs(mouseDeltaX), abs(mouseDeltaY)) + min(abs(mouseDeltaX), abs(mouseDeltaY)) / 2.f;
 		currentSegmentIndex = profile->FINDSEGMENT;
 		profile->pixelGain = screenResolutionFactor
@@ -407,7 +416,7 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 		                     / 3.5f;
 
 		if(currentSegmentIndex > profile->previousSegmentIndex){
-			// Average with calculation using previous curve segment
+			// Average with calculation using previous curve segment.
 			const float pixelGainUsingPreviousSegment = screenResolutionFactor
 			                                            * profile->sensitivity
 			                                            * spSmoothMouseGain(profile, mouseMag / 3.5f, &(profile->previousSegmentIndex))
@@ -417,7 +426,7 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 		profile->previousSegmentIndex = currentSegmentIndex;
 		accelerationMultiplier = profile->pixelGain;
 
-	// Quake acceleration
+	// Quake acceleration.
 	}else if(profile->acceleration == 4){
 
 		const float velocity = sqrtf(mouseDeltaX*mouseDeltaX+mouseDeltaY*mouseDeltaY);
@@ -425,41 +434,41 @@ inline void spUpdate(settingsProfile *const restrict profile, int mouseDeltaX, i
 
 	}
 
-	// Apply yaw and pitch multipliers
+	// Apply yaw and pitch multipliers.
 	mouseDeltaX *= profile->yawMultiplier;
 	mouseDeltaY *= profile->pitchMultiplier;
 
 	{
 
-		// Calculate full mouse deltas, including remainders
+		// Calculate full mouse deltas, including remainders.
 		const float mouseXplusRemainder = mouseDeltaX * accelerationMultiplier + profile->previousMouseXRemainder;
 		const float mouseYplusRemainder = mouseDeltaY * accelerationMultiplier + profile->previousMouseYRemainder;
 
 		// Update
 		if(profile->acceleration == 1 || profile->acceleration == 2){
 			if(!profile->winSubPixelation && fabs(mouseXplusRemainder) <= abs(mouseDeltaX)){
-				// XP & Vista when disableSubPixelation (never set, AFAIK)
+				// XP & Vista when disableSubPixelation (never set, AFAIK).
 				*mouseX = mouseDeltaX;
 				profile->previousMouseXRemainder = 0.0;
 				profile->pixelGain = 1.0;
 			}else{
-				// XP & Vista
+				// XP & Vista.
 				*mouseX = (int)floor(mouseXplusRemainder);
 				profile->previousMouseXRemainder = mouseXplusRemainder - *mouseX;
 			}
 			if(!profile->winSubPixelation && fabs(mouseYplusRemainder) <= abs(mouseDeltaY)){
-				// XP & Vista when disableSubPixelation (never set, AFAIK)
+				// XP & Vista when disableSubPixelation (never set, AFAIK).
 				*mouseY = mouseDeltaY;
 				profile->previousMouseYRemainder = 0.f;
 				profile->pixelGain = 1.f;
 			}else{
-				// XP & Vista
+				// XP & Vista.
 				*mouseY = (int)floor(mouseYplusRemainder);
 				profile->previousMouseYRemainder = mouseYplusRemainder - *mouseY;
 			}
 
 		}else if(profile->acceleration == 0 && accelerationMultiplier == 1.f){
-			// Slider = 0, no remainder to handle
+			// Slider = 0, no remainder to handle.
 			*mouseX = mouseDeltaX;
 			*mouseY = mouseDeltaY;
 
